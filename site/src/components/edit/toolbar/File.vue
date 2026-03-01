@@ -157,10 +157,31 @@ ${html}
 
 const exportPDF = () => {
   const title = document.title;
+  const htmlEl = document.documentElement;
+  const wasDark = htmlEl.classList.contains("dark");
+
+  // Force light mode for PDF rendering
+  if (wasDark) {
+    htmlEl.classList.remove("dark");
+    htmlEl.classList.add("light");
+  }
 
   document.title = saveName.value;
+
+  // Restore original state after printing completes
+  window.addEventListener(
+    "afterprint",
+    () => {
+      document.title = title;
+      if (wasDark) {
+        htmlEl.classList.remove("light");
+        htmlEl.classList.add("dark");
+      }
+    },
+    { once: true }
+  );
+
   window.print();
-  document.title = title;
 };
 
 const exportMd = () => {
