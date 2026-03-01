@@ -30,14 +30,14 @@ const rename = async (text: string) => {
 };
 
 const formatDate = (date?: string) => {
-  return (
-    date &&
-    new Date(parseInt(date))
-      .toISOString()
-      .substring(0, 19)
-      .replace("T", " ")
-      .replaceAll("-", "/")
-  );
+  if (!date) return undefined;
+  const timestamp = parseInt(date);
+  if (isNaN(timestamp)) return undefined;
+  return new Date(timestamp)
+    .toISOString()
+    .substring(0, 19)
+    .replace("T", " ")
+    .replaceAll("-", "/");
 };
 
 const created = computed(() => formatDate(props.resume.id));

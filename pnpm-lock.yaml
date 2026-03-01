@@ -167,6 +167,9 @@ importers:
       '@renovamen/vue-zoom':
         specifier: workspace:*
         version: link:../packages/vue-zoom
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/markdown-it-link-attributes':
         specifier: ^3.0.5
         version: 3.0.5
@@ -224,6 +227,9 @@ importers:
       html-docx-js-typescript:
         specifier: ^0.1.5
         version: 0.1.5
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
       katex:
         specifier: ^0.16.10
         version: 0.16.10

@@ -62,9 +62,23 @@ notification:
   delete: Curriculum "{msg}" has been deleted
   new: Creado nuevo resumen
   duplicate: Created resume "{old}"'s duplication "{new}"
+  commit_error: "Error al commit: {msg}"
   correct:
     yes: Corregidos {num} palabras
     no : Buen trabajo, no hubo nada que corregir!
   import:
     yes: Datos importados correctamente!
     no : Formato de datos inválido.
+
+github:
+  title: Integración con GitHub
+  desc: Conecte con GitHub para hacer commit de los cambios del currículum directamente a su repositorio. Necesita un Token de Acceso Personal con permisos de repo.
+  token_placeholder: Token de Acceso Personal de GitHub
+  repo_placeholder: "owner/repo"
+  login: Conectar
+  logout: Desconectar
+  commit: Commit a GitHub
+  error_no_token: Por favor, ingrese un token de GitHub
+  error_invalid_repo: "Por favor, ingrese un repo válido en formato owner/repo"
+  error_invalid_token: Token de GitHub no válido
+  error_no_access: "Sin acceso de escritura a {repo}"

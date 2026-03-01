@@ -7,6 +7,7 @@
 
       <template #tail>
         <SaveResume />
+        <CommitResume />
         <ToggleToolbar
           :is-toolbar-open="isToolbarOpen"
           @toggle-toolbar="isToolbarOpen = !isToolbarOpen"

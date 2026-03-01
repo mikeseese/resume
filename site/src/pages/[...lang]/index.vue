@@ -8,6 +8,14 @@
         <FileOptions @update="loadResumes" />
       </div>
 
+      <div class="mt-6 p-4 border border-c rounded-lg bg-c">
+        <h2 text-lg font-semibold mb-2>
+          <span i-tabler:brand-github mr-1 />
+          {{ $t("github.title") }}
+        </h2>
+        <GitHubSettings />
+      </div>
+
       <div class="flex flex-wrap gap-x-4 gap-y-8 mt-8">
         <NewResume />
         <ResumeItem

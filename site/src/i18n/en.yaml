@@ -63,9 +63,23 @@ notification:
   delete: Resume "{msg}" has been deleted
   new: New resume created
   duplicate: Created resume "{old}"'s duplication "{new}"
+  commit_error: "Commit failed: {msg}"
   correct:
     yes: Corrected {num} words
     no : All case are correct!
   import:
     yes: Data has been successfully imported!
     no : Data format is invalid.
+
+github:
+  title: GitHub Integration
+  desc: Connect to GitHub to commit resume changes directly to your repository. You need a Personal Access Token with repo scope.
+  token_placeholder: GitHub Personal Access Token
+  repo_placeholder: "owner/repo"
+  login: Connect
+  logout: Disconnect
+  commit: Commit to GitHub
+  error_no_token: Please enter a GitHub token
+  error_invalid_repo: "Please enter a valid repo in owner/repo format"
+  error_invalid_token: Invalid GitHub token
+  error_no_access: "No write access to {repo}"
