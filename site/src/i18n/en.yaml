@@ -60,6 +60,7 @@ toolbar:
 notification:
   save: Your changes have been saved
   switch: Switched to resume "{msg}"
+  not_found: Resume "{msg}" not found
   delete: Resume "{msg}" has been deleted
   new: New resume created
   duplicate: Created resume "{old}"'s duplication "{new}"

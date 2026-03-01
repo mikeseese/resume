@@ -60,6 +60,7 @@ toolbar:
 notification:
   save: Perubahan Anda telah disimpan
   switch: Beralih ke resume "{msg}"
+  not_found: Resume "{msg}" tidak ditemukan
   delete: Resume "{msg}" telah dihapus
   new: Resume baru dibuat
   duplicate: Duplikat resume "{old}" dibuat "{new}"

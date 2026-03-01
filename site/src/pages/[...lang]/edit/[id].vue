@@ -51,7 +51,17 @@ const api = computed(() => splitter.connect(state.value, send, normalizeProps));
 
 // Fetch resume data
 const route = useRoute();
-(async () => await switchResume(route.params.id as string))();
+const router = useRouter();
+const localePath = useLocalePath();
+
+(async () => {
+  const found = await switchResume(route.params.id as string);
+  if (!found) {
+    const toast = useToast();
+    toast.notFound(route.params.id as string);
+    router.replace(localePath("/"));
+  }
+})();
 
 // Toogle toolbar
 const { width } = useWindowSize();

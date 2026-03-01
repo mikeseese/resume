@@ -59,6 +59,7 @@ toolbar:
 notification:
   save: 保存成功
   switch: 已切换到简历 "{msg}"
+  not_found: 未找到简历 "{msg}"
   delete: 已删除简历 "{msg}"
   new: 新建成功
   duplicate: 已创建简历 "{old}" 的副本 "{new}"
