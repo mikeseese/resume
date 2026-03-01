@@ -167,14 +167,21 @@ const exportPDF = () => {
   }
 
   document.title = saveName.value;
-  window.print();
-  document.title = title;
 
-  // Restore dark mode if it was active
-  if (wasDark) {
-    htmlEl.classList.remove("light");
-    htmlEl.classList.add("dark");
-  }
+  // Restore original state after printing completes
+  window.addEventListener(
+    "afterprint",
+    () => {
+      document.title = title;
+      if (wasDark) {
+        htmlEl.classList.remove("light");
+        htmlEl.classList.add("dark");
+      }
+    },
+    { once: true }
+  );
+
+  window.print();
 };
 
 const exportMd = () => {
