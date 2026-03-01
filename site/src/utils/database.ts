@@ -19,19 +19,24 @@ export const getResumeList = async (): Promise<ResumeListItem[]> => {
     fromFile: false
   }));
 
-  // Get file-based resumes from the manifest
+  // Get file-based resumes from the manifest and load their content
   const manifest = await fetchResumeManifest();
-  const fileResumes = manifest
+  const fileResumePromises = manifest
     .filter((item) => !storage[`file:${item.id}`]) // not already overridden locally
-    .map((item) => ({
-      id: `file:${item.id}`,
-      name: item.name,
-      markdown: DEFAULT_MD_CONTENT,
-      css: DEFAULT_CSS_CONTENT,
-      styles: DEFAULT_STYLES,
-      update: item.id,
-      fromFile: true
-    }));
+    .map(async (item) => {
+      const fileData = await fetchResumeFile(item.id);
+      return {
+        id: `file:${item.id}`,
+        name: fileData?.name || item.name,
+        markdown: fileData?.markdown || DEFAULT_MD_CONTENT,
+        css: fileData?.css || DEFAULT_CSS_CONTENT,
+        styles: fileData?.styles || DEFAULT_STYLES,
+        update: item.id,
+        fromFile: true
+      };
+    });
+
+  const fileResumes = await Promise.all(fileResumePromises);
 
   // Merge and sort: file-based first, then local
   return [...fileResumes, ...localResumes].sort((a, b) =>
@@ -191,6 +196,10 @@ export const deleteResume = async (id: string) => {
     await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
 
     toast.delete(name);
+  } else if (id.startsWith("file:")) {
+    // File-based resume not in local storage - mark as deleted locally
+    // The user would need to delete from GitHub via a commit to fully remove it
+    toast.delete(id.substring(5));
   }
 };
 
@@ -211,9 +220,9 @@ export const switchResume = async (id: string) => {
     const resume = await fetchResumeFile(fileId);
     if (resume) {
       // Save to local storage so edits persist
-      const localStorage = (await getStorage()) || {};
-      localStorage[id] = resume;
-      await localForage.setItem(MARKDOWN_RESUME_KEY, localStorage);
+      const currentStorage = (await getStorage()) || {};
+      currentStorage[id] = resume;
+      await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
 
       setResume(id, resume);
       toast.switch(resume.name);
@@ -226,9 +235,19 @@ export const switchResume = async (id: string) => {
 
 export const duplicateResume = async (id: string) => {
   const toast = useToast();
-  const storage = await getStorage();
+  const storage = (await getStorage()) || {};
 
-  if (storage && storage[id]) {
+  // If not in local storage, try to load from file
+  if (!storage[id] && id.startsWith("file:")) {
+    const fileId = id.substring(5);
+    const resume = await fetchResumeFile(fileId);
+    if (resume) {
+      storage[id] = resume;
+      await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
+    }
+  }
+
+  if (storage[id]) {
     // Generate an id and name for duplicated resume
     const resume = copy(storage[id]);
     const newId = new Date().getTime().toString();
@@ -245,9 +264,20 @@ export const duplicateResume = async (id: string) => {
 
 export const renameResume = async (id: string, name: string) => {
   const storage = (await getStorage()) || {};
-  storage[id].name = name;
 
-  await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
+  // If not in local storage, try to load from file
+  if (!storage[id] && id.startsWith("file:")) {
+    const fileId = id.substring(5);
+    const resume = await fetchResumeFile(fileId);
+    if (resume) {
+      storage[id] = resume;
+    }
+  }
+
+  if (storage[id]) {
+    storage[id].name = name;
+    await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
+  }
 
   const toast = useToast();
   toast.save();

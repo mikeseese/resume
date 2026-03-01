@@ -78,3 +78,7 @@ github:
   login: Conectar
   logout: Desconectar
   commit: Commit a GitHub
+  error_no_token: Por favor, ingrese un token de GitHub
+  error_invalid_repo: "Por favor, ingrese un repo válido en formato owner/repo"
+  error_invalid_token: Token de GitHub no válido
+  error_no_access: "Sin acceso de escritura a {repo}"

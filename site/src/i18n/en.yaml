@@ -79,3 +79,7 @@ github:
   login: Connect
   logout: Disconnect
   commit: Commit to GitHub
+  error_no_token: Please enter a GitHub token
+  error_invalid_repo: "Please enter a valid repo in owner/repo format"
+  error_invalid_token: Invalid GitHub token
+  error_no_access: "No write access to {repo}"

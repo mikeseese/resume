@@ -56,6 +56,7 @@ import {
   checkRepoAccess
 } from "~/utils/github";
 
+const { t } = useI18n();
 const tokenInput = ref("");
 const repoInput = ref("");
 const username = ref("");
@@ -85,13 +86,13 @@ const login = async () => {
   error.value = "";
 
   if (!tokenInput.value.trim()) {
-    error.value = "Please enter a GitHub token";
+    error.value = t("github.error_no_token");
     return;
   }
 
   const repoParts = repoInput.value.trim().split("/");
   if (repoParts.length !== 2 || !repoParts[0] || !repoParts[1]) {
-    error.value = "Please enter a valid repo in owner/repo format";
+    error.value = t("github.error_invalid_repo");
     return;
   }
 
@@ -100,14 +101,14 @@ const login = async () => {
   // Validate token
   const result = await validateGitHubToken(tokenInput.value.trim());
   if (!result.valid) {
-    error.value = "Invalid GitHub token";
+    error.value = t("github.error_invalid_token");
     return;
   }
 
   // Check repo access
   const hasAccess = await checkRepoAccess(tokenInput.value.trim(), owner, repo);
   if (!hasAccess) {
-    error.value = `No write access to ${owner}/${repo}`;
+    error.value = t("github.error_no_access", { repo: `${owner}/${repo}` });
     return;
   }
 

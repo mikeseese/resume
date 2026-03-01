@@ -146,7 +146,11 @@ export const commitResumeFile = async (
 
     const body: Record<string, string> = {
       message,
-      content: btoa(unescape(encodeURIComponent(content)))
+      content: btoa(
+        Array.from(new TextEncoder().encode(content))
+          .map((b) => String.fromCharCode(b))
+          .join("")
+      )
     };
 
     if (sha) {

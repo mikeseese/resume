@@ -79,3 +79,7 @@ github:
   login: Hubungkan
   logout: Putuskan
   commit: Commit ke GitHub
+  error_no_token: Silakan masukkan token GitHub
+  error_invalid_repo: "Silakan masukkan repo yang valid dalam format owner/repo"
+  error_invalid_token: Token GitHub tidak valid
+  error_no_access: "Tidak ada akses tulis ke {repo}"
