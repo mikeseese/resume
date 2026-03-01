@@ -23,9 +23,7 @@
 
       <slot name="tail" />
 
-      <!--
       <ToggleDark />
-      -->
       <a
         class="round-btn"
         href="http://github.com/mikeseese/resume/"
