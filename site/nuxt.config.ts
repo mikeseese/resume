@@ -12,7 +12,8 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxtjs/color-mode",
     "@vite-pwa/nuxt",
-    "nuxt-simple-sitemap"
+    "nuxt-simple-sitemap",
+    "~/modules/resume-files"
   ],
 
   css: [

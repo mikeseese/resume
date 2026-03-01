@@ -22,3 +22,6 @@ logs
 .env
 .env.*
 !.env.example
+
+# Generated resume files (copied from /resumes at build time)
+site/src/public/resumes

@@ -1,21 +1,42 @@
 import * as localForage from "localforage";
 import { downloadFile, uploadFile, copy, isClient } from "@renovamen/utils";
 import { DEFAULT_STYLES, DEFAULT_NAME, DEFAULT_MD_CONTENT, DEFAULT_CSS_CONTENT } from ".";
-import type { ResumeStorage, ResumeStorageItem, ResumeStyles } from "~/types";
+import { fetchResumeManifest, fetchResumeFile } from "./resumeFiles";
+import type { ResumeStorage, ResumeStorageItem, ResumeStyles, ResumeListItem } from "~/types";
 
 const MARKDOWN_RESUME_KEY = "MARKDOWN_RESUME_data";
 
 export const getStorage = async () =>
   isClient ? localForage.getItem<ResumeStorage>(MARKDOWN_RESUME_KEY) : null;
 
-export const getResumeList = async () => {
+export const getResumeList = async (): Promise<ResumeListItem[]> => {
   const storage = (await getStorage()) || {};
-  return Object.keys(storage)
-    .map((i) => ({
-      id: i,
-      ...storage[i]
-    }))
-    .sort((a, b) => (b.update || b.id).localeCompare(a.update || a.id));
+
+  // Get local resumes
+  const localResumes = Object.keys(storage).map((i) => ({
+    id: i,
+    ...storage[i],
+    fromFile: false
+  }));
+
+  // Get file-based resumes from the manifest
+  const manifest = await fetchResumeManifest();
+  const fileResumes = manifest
+    .filter((item) => !storage[`file:${item.id}`]) // not already overridden locally
+    .map((item) => ({
+      id: `file:${item.id}`,
+      name: item.name,
+      markdown: DEFAULT_MD_CONTENT,
+      css: DEFAULT_CSS_CONTENT,
+      styles: DEFAULT_STYLES,
+      update: item.id,
+      fromFile: true
+    }));
+
+  // Merge and sort: file-based first, then local
+  return [...fileResumes, ...localResumes].sort((a, b) =>
+    (b.update || b.id).localeCompare(a.update || a.id)
+  );
 };
 
 export const setResumeStyles = (styles: ResumeStyles) => {
@@ -177,10 +198,27 @@ export const switchResume = async (id: string) => {
   const toast = useToast();
   const storage = await getStorage();
 
+  // Check local storage first
   if (storage && storage[id]) {
     setResume(id, storage[id]);
     toast.switch(storage[id].name);
     return true;
+  }
+
+  // Check if this is a file-based resume (id starts with "file:")
+  if (id.startsWith("file:")) {
+    const fileId = id.substring(5);
+    const resume = await fetchResumeFile(fileId);
+    if (resume) {
+      // Save to local storage so edits persist
+      const localStorage = (await getStorage()) || {};
+      localStorage[id] = resume;
+      await localForage.setItem(MARKDOWN_RESUME_KEY, localStorage);
+
+      setResume(id, resume);
+      toast.switch(resume.name);
+      return true;
+    }
   }
 
   return false;

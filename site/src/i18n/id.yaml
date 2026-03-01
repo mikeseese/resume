@@ -63,9 +63,19 @@ notification:
   delete: Resume "{msg}" telah dihapus
   new: Resume baru dibuat
   duplicate: Duplikat resume "{old}" dibuat "{new}"
+  commit_error: "Gagal commit: {msg}"
   correct:
     yes: Memperbaiki {num} kata
     no : Semua huruf sudah benar!
   import:
     yes: Data berhasil diimpor!
     no : Format data tidak valid.
+
+github:
+  title: Integrasi GitHub
+  desc: Hubungkan ke GitHub untuk mengcommit perubahan resume langsung ke repositori Anda. Anda memerlukan Personal Access Token dengan scope repo.
+  token_placeholder: GitHub Personal Access Token
+  repo_placeholder: "owner/repo"
+  login: Hubungkan
+  logout: Putuskan
+  commit: Commit ke GitHub

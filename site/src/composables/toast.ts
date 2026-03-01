@@ -70,6 +70,13 @@ export const useToast = () => {
     }
   };
 
+  const commitError = (msg: string) => {
+    $toast.value.create({
+      description: nuxtApp.$i18n.t("notification.commit_error", { msg }),
+      type: "error"
+    });
+  };
+
   return {
     save,
     switch: switchResume,
@@ -77,6 +84,7 @@ export const useToast = () => {
     new: newResume,
     duplicate,
     correct,
-    import: importResume
+    import: importResume,
+    commitError
   };
 };

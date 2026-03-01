@@ -62,9 +62,19 @@ notification:
   delete: 已删除简历 "{msg}"
   new: 新建成功
   duplicate: 已创建简历 "{old}" 的副本 "{new}"
+  commit_error: "提交失败：{msg}"
   correct:
     yes: 成功修正 {num} 个单词
     no : 您的所有拼写都是正确的！
   import:
     yes: 已成功导入数据！
     no : 数据格式不正确
+
+github:
+  title: GitHub 集成
+  desc: 连接到 GitHub 以将简历更改直接提交到您的仓库。您需要一个具有 repo 权限的个人访问令牌。
+  token_placeholder: GitHub 个人访问令牌
+  repo_placeholder: "owner/repo"
+  login: 连接
+  logout: 断开
+  commit: 提交到 GitHub

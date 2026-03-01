@@ -61,6 +61,7 @@ export type ResumeStorage = {
 
 export interface ResumeListItem extends ResumeStorageItem {
   id: string;
+  fromFile?: boolean;
 }
 
 export type DropdownItem = {
