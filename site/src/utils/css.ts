@@ -47,11 +47,11 @@ export const setDynamicCss = (styles: ResumeStyles, id: string) => {
     lineHeightCss(styles, pageId) +
     (id === "preview" ? paperCss(styles) : "");
 
-  injectCSS(content, `markdown-resume-dynamic-${id}`);
+  injectCSS(content, `resume-dynamic-${id}`);
 };
 
 export const setBackboneCss = (css: string, id: string) => {
   if (id !== "preview") css = css.replaceAll(PREVIEW_SELECTOR, `#vue-smart-pages-${id}`);
 
-  injectCSS(css, `markdown-resume-backbone-${id}`);
+  injectCSS(css, `resume-backbone-${id}`);
 };

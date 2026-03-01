@@ -28,7 +28,7 @@
       -->
       <a
         class="round-btn"
-        href="http://github.com/junian/markdown-resume/"
+        href="http://github.com/mikeseese/resume/"
         target="_blank"
         rel="nofollow noopener"
       >

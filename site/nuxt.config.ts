@@ -46,7 +46,7 @@ export default defineNuxtConfig({
     //    baseURL: '/'
     // Else if host it on https://example.com/resume
     //    baseURL: '/resume/'
-    baseURL: '/markdown-resume/', // baseURL: '/<repository>/'
+    baseURL: '/resume/', // baseURL: '/<repository>/'
     buildAssetsDir: 'assets', // don't use "_" at the begining of the folder name to avoids
     head: {
       viewport: "width=device-width,initial-scale=1",
@@ -59,14 +59,14 @@ export default defineNuxtConfig({
         { name: "application-name", content: "Markdown Resume" },
         { name: "apple-mobile-web-app-title", content: "Markdown Resume" },
         { name: "msapplication-TileColor", content: "#fff" },
-        { property: "og:url", content: "https://www.junian.dev/markdown-resume/" },
+        { property: "og:url", content: "https://resume.mikeseese.com/" },
         { property: "og:type", content: "website" }
       ]
     }
   },
 
   site: {
-    url: "https://www.junian.dev/markdown-resume/"
+    url: "https://resume.mikeseese.com/"
   },
 
   pwa,

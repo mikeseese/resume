@@ -12,7 +12,7 @@ landing:
   start: Buat Resume Saya
   feats:
     - title: Sederhana dan Powerful
-      items: Kelola beberapa resume<br>Pratinjau real-time<br>Ekspor ke format PDF<br>Sepenuhnya dapat disesuaikan<br>Pilih font dan tambahkan ikon<br>Dan <a href="https://github.com/junian/markdown-resume#features" target="_blank">fitur lainnya</a>
+      items: Kelola beberapa resume<br>Pratinjau real-time<br>Ekspor ke format PDF<br>Sepenuhnya dapat disesuaikan<br>Pilih font dan tambahkan ikon<br>Dan <a href="https://github.com/mikeseese/resume#features" target="_blank">fitur lainnya</a>
     - title: Privasi Utama
       items: Open source dan gratis<br>Data disimpan secara lokal<br>Tidak perlu login atau registrasi<br>Tidak ada pelacakan pengguna<br>Tidak ada iklan
 
