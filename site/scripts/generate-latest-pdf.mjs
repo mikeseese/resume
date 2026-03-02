@@ -30,7 +30,7 @@ const __dirname = dirname(__filename);
 const SITE_DIR = resolve(__dirname, "..");
 const ROOT_DIR = resolve(SITE_DIR, "..");
 const RESUMES_DIR = join(ROOT_DIR, "resumes");
-const OUTPUT_DIR = join(SITE_DIR, "dist");
+const OUTPUT_DIR = join(SITE_DIR, "dist", "assets");
 const OUTPUT_PATH = join(OUTPUT_DIR, "latest.pdf");
 
 // ─── Default Styles (mirrors site/src/utils/constants/default.ts) ───────────
