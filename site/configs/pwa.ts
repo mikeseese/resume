@@ -34,6 +34,7 @@ export const pwa: ModuleOptions = {
     globPatterns: ["**/*.{js,css,html,otf,ttf,woff2,png,svg}"],
     maximumFileSizeToCacheInBytes: 16000000,
     cleanupOutdatedCaches: true,
+    navigateFallbackDenylist: [/\.pdf$/],
     runtimeCaching: [
       {
         urlPattern: /^https:\/\/fonts.googleapis.com\/.*/i,
