@@ -1,6 +1,7 @@
 import * as yaml from "js-yaml";
 import { isClient } from "@renovamen/utils";
 import { DEFAULT_STYLES, DEFAULT_CSS_CONTENT } from ".";
+import { getGitHubToken } from "./github";
 import type { ResumeStyles, ResumeStorageItem } from "~/types";
 
 const GITHUB_OWNER = "mikeseese";
@@ -13,24 +14,43 @@ interface ResumeManifestItem {
 }
 
 /**
- * Fetch the resume manifest from GitHub's tree-commit-info endpoint
+ * Build GitHub API request headers, including PAT token auth if available
+ */
+const getGitHubApiHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github.v3+json"
+  };
+  const token = getGitHubToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
+};
+
+/**
+ * Fetch the resume manifest from GitHub REST API (Contents endpoint)
  */
 export const fetchResumeManifest = async (): Promise<ResumeManifestItem[]> => {
   if (!isClient) return [];
 
   try {
     const res = await fetch(
-      `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/tree-commit-info/${GITHUB_BRANCH}/resumes`,
-      { headers: { Accept: "application/json" } }
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/resumes?ref=${GITHUB_BRANCH}`,
+      { headers: getGitHubApiHeaders() }
     );
     if (!res.ok) return [];
 
     const data = await res.json();
-    return Object.entries(data)
-      .filter(([filename]) => filename.endsWith(".md"))
-      .map(([filename, info]) => ({
-        id: filename.replace(/\.md$/, ""),
-        commitHash: (info as { oid: string }).oid
+    if (!Array.isArray(data)) return [];
+
+    return data
+      .filter(
+        (item: { name: string; type: string }) =>
+          item.type === "file" && item.name.endsWith(".md")
+      )
+      .map((item: { name: string; sha: string }) => ({
+        id: item.name.replace(/\.md$/, ""),
+        commitHash: item.sha
       }));
   } catch {
     return [];
@@ -38,41 +58,47 @@ export const fetchResumeManifest = async (): Promise<ResumeManifestItem[]> => {
 };
 
 /**
- * Fetch the latest commit hash for a specific resume file from GitHub
+ * Fetch the latest blob SHA for a specific resume file from GitHub REST API
  */
 export const fetchLatestCommitHash = async (fileId: string): Promise<string | null> => {
   if (!isClient) return null;
 
   try {
     const res = await fetch(
-      `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/commits/deferred_commit_data/${GITHUB_BRANCH}?original_branch=${GITHUB_BRANCH}&path=resumes%2F${fileId}.md`,
-      { headers: { Accept: "application/json" } }
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/resumes/${fileId}.md?ref=${GITHUB_BRANCH}`,
+      { headers: getGitHubApiHeaders() }
     );
     if (!res.ok) return null;
 
     const data = await res.json();
-    if (data.deferredCommits && data.deferredCommits.length > 0) {
-      return data.deferredCommits[0].oid;
-    }
-    return null;
+    return data.sha || null;
   } catch {
     return null;
   }
 };
 
 /**
- * Fetch and parse a resume .md file from GitHub's raw content
+ * Fetch and parse a resume .md file from GitHub REST API (Contents endpoint)
  */
 export const fetchResumeFile = async (id: string): Promise<ResumeStorageItem | null> => {
   if (!isClient) return null;
 
   try {
     const res = await fetch(
-      `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/refs/heads/${GITHUB_BRANCH}/resumes/${id}.md`
+      `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/resumes/${id}.md?ref=${GITHUB_BRANCH}`,
+      { headers: getGitHubApiHeaders() }
     );
     if (!res.ok) return null;
 
-    const content = await res.text();
+    const data = await res.json();
+    if (!data.content) return null;
+
+    // Decode base64 content with proper UTF-8 handling
+    const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, "")), (c) =>
+      c.charCodeAt(0)
+    );
+    const content = new TextDecoder().decode(bytes);
+
     return parseResumeFile(content, id);
   } catch {
     return null;
