@@ -13,7 +13,8 @@ export const DEFAULT_STYLES = {
     fontFamily: "HKST"
   },
   fontEN: {
-    name: "Verdana"
+    name: "Fira Sans",
+    fontFamily: "Fira Sans"
   },
   fontSize: 12,
   paper: "A4"
