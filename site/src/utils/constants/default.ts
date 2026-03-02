@@ -19,10 +19,7 @@ export const DEFAULT_STYLES = {
   paper: "A4"
 } as ResumeStyles;
 
-export const DEFAULT_MD_CONTENT = `---
----
-
-# Bruce Wayne
+export const DEFAULT_MD_CONTENT = `# Bruce Wayne
 
 <span class="iconify" data-icon="charm:person"></span> [example.com](https://example.com/)
   : <span class="iconify" data-icon="tabler:brand-github"></span> [github.com/example](https://github.com/example)

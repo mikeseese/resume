@@ -125,7 +125,7 @@ export const parseResumeFile = (content: string, id: string): ResumeStorageItem 
 
   return {
     name: attributes.name || id,
-    markdown: body.trim() ? `---\n---\n\n${body.trim()}\n` : `---\n---\n`,
+    markdown: body.trim() + "\n",
     css: attributes.css || DEFAULT_CSS_CONTENT,
     styles,
     update: id
