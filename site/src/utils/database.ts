@@ -126,8 +126,7 @@ export const saveResume = async (id: string, resume: ResumeStorageItem) => {
 
   // Preserve commitHash and mark as dirty for file-based resumes
   if (id.startsWith("file:") && storage[id]?.commitHash) {
-    resume.commitHash = storage[id].commitHash;
-    resume.dirty = true;
+    resume = { ...resume, commitHash: storage[id].commitHash, dirty: true };
   }
 
   storage[id] = resume;
@@ -297,9 +296,8 @@ export const switchResume = async (id: string): Promise<SwitchResumeResult> => {
   if (cached && cached.dirty && cached.commitHash !== latestHash) {
     const remoteResume = await fetchResumeFile(fileId);
     if (remoteResume) {
-      remoteResume.commitHash = latestHash;
-      remoteResume.dirty = false;
-      return { status: "conflict", local: cached, remote: remoteResume };
+      const updatedRemote = { ...remoteResume, commitHash: latestHash, dirty: false };
+      return { status: "conflict", local: cached, remote: updatedRemote };
     }
     // If we can't fetch remote, just use cached
     setResume(id, cached);
@@ -311,15 +309,14 @@ export const switchResume = async (id: string): Promise<SwitchResumeResult> => {
   // Or no cached version at all → fetch from GitHub
   const resume = await fetchResumeFile(fileId);
   if (resume) {
-    resume.commitHash = latestHash;
-    resume.dirty = false;
+    const updatedResume = { ...resume, commitHash: latestHash, dirty: false };
 
     const currentStorage = (await getStorage()) || {};
-    currentStorage[id] = resume;
+    currentStorage[id] = updatedResume;
     await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
 
-    setResume(id, resume);
-    toast.switch(resume.name);
+    setResume(id, updatedResume);
+    toast.switch(updatedResume.name);
     return { status: "loaded" };
   }
 
@@ -341,13 +338,12 @@ export const resolveConflict = async (
   const toast = useToast();
   const currentStorage = (await getStorage()) || {};
 
-  chosen.commitHash = latestHash;
-  chosen.dirty = false;
-  currentStorage[id] = chosen;
+  const updatedChosen = { ...chosen, commitHash: latestHash, dirty: false };
+  currentStorage[id] = updatedChosen;
   await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
 
-  setResume(id, chosen);
-  toast.switch(chosen.name);
+  setResume(id, updatedChosen);
+  toast.switch(updatedChosen.name);
 };
 
 export const duplicateResume = async (id: string) => {

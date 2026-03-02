@@ -88,20 +88,16 @@ onBeforeUnmount(() => {
 });
 
 const keepLocal = async () => {
-  await resolveConflict(
-    props.resumeId,
-    { ...props.localResume },
-    props.remoteResume.commitHash!
-  );
+  const hash = props.remoteResume.commitHash;
+  if (!hash) return;
+  await resolveConflict(props.resumeId, { ...props.localResume }, hash);
   emit("resolved");
 };
 
 const useRemote = async () => {
-  await resolveConflict(
-    props.resumeId,
-    { ...props.remoteResume },
-    props.remoteResume.commitHash!
-  );
+  const hash = props.remoteResume.commitHash;
+  if (!hash) return;
+  await resolveConflict(props.resumeId, { ...props.remoteResume }, hash);
   emit("resolved");
 };
 </script>
