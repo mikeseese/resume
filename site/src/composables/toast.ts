@@ -18,6 +18,13 @@ export const useToast = () => {
     });
   };
 
+  const notFound = (msg: string) => {
+    $toast.value.create({
+      description: nuxtApp.$i18n.t("notification.not_found", { msg }),
+      type: "error"
+    });
+  };
+
   const deleteResume = (msg: string) => {
     $toast.value.create({
       description: nuxtApp.$i18n.t("notification.delete", { msg }),
@@ -80,6 +87,7 @@ export const useToast = () => {
   return {
     save,
     switch: switchResume,
+    notFound,
     delete: deleteResume,
     new: newResume,
     duplicate,

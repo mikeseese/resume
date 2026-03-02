@@ -59,6 +59,7 @@ toolbar:
 notification:
   save: Cambios Guardados
   switch: Cambiando a curriculum "{msg}"
+  not_found: Curriculum "{msg}" no encontrado
   delete: Curriculum "{msg}" has been deleted
   new: Creado nuevo resumen
   duplicate: Created resume "{old}"'s duplication "{new}"

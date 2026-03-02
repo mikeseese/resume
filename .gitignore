@@ -17,6 +17,7 @@ logs
 .DS_Store
 .idea
 .vscode
+package-lock.json
 
 # Local env files
 .env
