@@ -94,11 +94,9 @@ export const fetchResumeFile = async (id: string): Promise<ResumeStorageItem | n
     if (!data.content) return null;
 
     // Decode base64 content with proper UTF-8 handling
-    const binary = atob(data.content.replace(/\n/g, ""));
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
+    const bytes = Uint8Array.from(atob(data.content.replace(/\n/g, "")), (c) =>
+      c.charCodeAt(0)
+    );
     const content = new TextDecoder().decode(bytes);
 
     return parseResumeFile(content, id);
