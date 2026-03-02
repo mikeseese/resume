@@ -430,11 +430,8 @@ async function main() {
   // Get custom CSS or use default
   const cssContent = attributes.css || DEFAULT_CSS_CONTENT;
 
-  // Prepare markdown (same as parseResumeFile in resumeFiles.ts)
-  const markdownContent = body.trim() ? `---\n---\n\n${body.trim()}\n` : "---\n---\n";
-
   // Render markdown to HTML
-  const html = renderMarkdown(markdownContent);
+  const html = renderMarkdown(body.trim());
 
   // Generate the complete HTML document
   const htmlDocument = generateHtmlDocument(html, styles, cssContent);
