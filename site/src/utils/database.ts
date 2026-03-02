@@ -1,8 +1,18 @@
 import * as localForage from "localforage";
 import { downloadFile, uploadFile, copy, isClient } from "@renovamen/utils";
 import { DEFAULT_STYLES, DEFAULT_NAME, DEFAULT_MD_CONTENT, DEFAULT_CSS_CONTENT } from ".";
-import { fetchResumeManifest, fetchResumeFile } from "./resumeFiles";
-import type { ResumeStorage, ResumeStorageItem, ResumeStyles, ResumeListItem } from "~/types";
+import {
+  fetchResumeManifest,
+  fetchResumeFile,
+  fetchLatestCommitHash
+} from "./resumeFiles";
+import type {
+  ResumeStorage,
+  ResumeStorageItem,
+  ResumeStyles,
+  ResumeListItem,
+  SwitchResumeResult
+} from "~/types";
 
 const MARKDOWN_RESUME_KEY = "MARKDOWN_RESUME_data";
 
@@ -12,34 +22,58 @@ export const getStorage = async () =>
 export const getResumeList = async (): Promise<ResumeListItem[]> => {
   const storage = (await getStorage()) || {};
 
-  // Get local resumes
-  const localResumes = Object.keys(storage).map((i) => ({
-    id: i,
-    ...storage[i],
-    fromFile: false
-  }));
+  // Get local resumes (non-file-based)
+  const localResumes = Object.keys(storage)
+    .filter((i) => !i.startsWith("file:"))
+    .map((i) => ({
+      id: i,
+      ...storage[i],
+      fromFile: false
+    }));
 
-  // Get file-based resumes from the manifest and load their content
+  // Get file-based resumes from GitHub manifest
   const manifest = await fetchResumeManifest();
-  const fileResumePromises = manifest
-    .filter((item) => !storage[`file:${item.id}`]) // not already overridden locally
-    .map(async (item) => {
-      const fileData = await fetchResumeFile(item.id);
+  const fileResumePromises = manifest.map(async (item) => {
+    const storageKey = `file:${item.id}`;
+    const cached = storage[storageKey];
+
+    // If we have a cached version, use its name and metadata
+    if (cached) {
       return {
-        id: `file:${item.id}`,
-        name: fileData?.name || item.name,
-        markdown: fileData?.markdown || DEFAULT_MD_CONTENT,
-        css: fileData?.css || DEFAULT_CSS_CONTENT,
-        styles: fileData?.styles || DEFAULT_STYLES,
-        update: item.id,
+        id: storageKey,
+        ...cached,
         fromFile: true
       };
-    });
+    }
+
+    // Otherwise fetch from GitHub
+    const fileData = await fetchResumeFile(item.id);
+    return {
+      id: storageKey,
+      name: fileData?.name || item.id,
+      markdown: fileData?.markdown || DEFAULT_MD_CONTENT,
+      css: fileData?.css || DEFAULT_CSS_CONTENT,
+      styles: fileData?.styles || DEFAULT_STYLES,
+      update: item.id,
+      commitHash: item.commitHash,
+      fromFile: true
+    };
+  });
 
   const fileResumes = await Promise.all(fileResumePromises);
 
+  // Also include file-based resumes in storage that may not be in the manifest anymore
+  const manifestIds = new Set(manifest.map((item) => `file:${item.id}`));
+  const storedFileResumes = Object.keys(storage)
+    .filter((i) => i.startsWith("file:") && !manifestIds.has(i))
+    .map((i) => ({
+      id: i,
+      ...storage[i],
+      fromFile: true
+    }));
+
   // Merge and sort: file-based first, then local
-  return [...fileResumes, ...localResumes].sort((a, b) =>
+  return [...fileResumes, ...storedFileResumes, ...localResumes].sort((a, b) =>
     (b.update || b.id).localeCompare(a.update || a.id)
   );
 };
@@ -89,6 +123,12 @@ export const setResume = (id: string, resume: ResumeStorageItem) => {
  */
 export const saveResume = async (id: string, resume: ResumeStorageItem) => {
   const storage = (await getStorage()) || {};
+
+  // Preserve commitHash and mark as dirty for file-based resumes
+  if (id.startsWith("file:") && storage[id]?.commitHash) {
+    resume = { ...resume, commitHash: storage[id].commitHash, dirty: true };
+  }
+
   storage[id] = resume;
 
   await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
@@ -203,34 +243,107 @@ export const deleteResume = async (id: string) => {
   }
 };
 
-export const switchResume = async (id: string) => {
+export const switchResume = async (id: string): Promise<SwitchResumeResult> => {
   const toast = useToast();
   const storage = await getStorage();
 
-  // Check local storage first
-  if (storage && storage[id]) {
-    setResume(id, storage[id]);
-    toast.switch(storage[id].name);
-    return true;
+  // For non-file-based resumes, just check local storage
+  if (!id.startsWith("file:")) {
+    if (storage && storage[id]) {
+      setResume(id, storage[id]);
+      toast.switch(storage[id].name);
+      return { status: "loaded" };
+    }
+    return { status: "not_found" };
   }
 
-  // Check if this is a file-based resume (id starts with "file:")
-  if (id.startsWith("file:")) {
-    const fileId = id.substring(5);
+  // File-based resume logic
+  const fileId = id.substring(5);
+  const cached = storage?.[id];
+
+  // Fetch latest commit hash from GitHub
+  const latestHash = await fetchLatestCommitHash(fileId);
+
+  // If we can't reach GitHub to get the hash
+  if (!latestHash) {
+    // If we have a cached version, use it regardless
+    if (cached) {
+      setResume(id, cached);
+      toast.switch(cached.name);
+      return { status: "loaded" };
+    }
+    // Try fetching the file directly as a fallback
     const resume = await fetchResumeFile(fileId);
     if (resume) {
-      // Save to local storage so edits persist
       const currentStorage = (await getStorage()) || {};
       currentStorage[id] = resume;
       await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
-
       setResume(id, resume);
       toast.switch(resume.name);
-      return true;
+      return { status: "loaded" };
     }
+    return { status: "not_found" };
   }
 
-  return false;
+  // Case 4: Cached version has the latest hash (clean or dirty) → do nothing, use cached
+  if (cached && cached.commitHash === latestHash) {
+    setResume(id, cached);
+    toast.switch(cached.name);
+    return { status: "loaded" };
+  }
+
+  // Case 5: Cached version is dirty and not the latest → show diff editor
+  if (cached && cached.dirty && cached.commitHash !== latestHash) {
+    const remoteResume = await fetchResumeFile(fileId);
+    if (remoteResume) {
+      const updatedRemote = { ...remoteResume, commitHash: latestHash, dirty: false };
+      return { status: "conflict", local: cached, remote: updatedRemote };
+    }
+    // If we can't fetch remote, just use cached
+    setResume(id, cached);
+    toast.switch(cached.name);
+    return { status: "loaded" };
+  }
+
+  // Case 3: Cached version is clean but not latest hash → update cache
+  // Or no cached version at all → fetch from GitHub
+  const resume = await fetchResumeFile(fileId);
+  if (resume) {
+    const updatedResume = { ...resume, commitHash: latestHash, dirty: false };
+
+    const currentStorage = (await getStorage()) || {};
+    currentStorage[id] = updatedResume;
+    await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
+
+    setResume(id, updatedResume);
+    toast.switch(updatedResume.name);
+    return { status: "loaded" };
+  }
+
+  return { status: "not_found" };
+};
+
+/**
+ * Resolve a conflict between local and remote versions of a file-based resume
+ *
+ * @param id resume id (must start with "file:")
+ * @param chosen the chosen resume version to keep
+ * @param latestHash the latest commit hash from GitHub
+ */
+export const resolveConflict = async (
+  id: string,
+  chosen: ResumeStorageItem,
+  latestHash: string
+) => {
+  const toast = useToast();
+  const currentStorage = (await getStorage()) || {};
+
+  const updatedChosen = { ...chosen, commitHash: latestHash, dirty: false };
+  currentStorage[id] = updatedChosen;
+  await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
+
+  setResume(id, updatedChosen);
+  toast.switch(updatedChosen.name);
 };
 
 export const duplicateResume = async (id: string) => {

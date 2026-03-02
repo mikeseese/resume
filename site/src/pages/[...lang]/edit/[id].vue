@@ -1,5 +1,26 @@
 <template>
-  <div class="edit-page flex flex-col">
+  <div v-if="notFound" class="flex flex-col items-center justify-center h-full pt-32">
+    <h1 text-4xl font-bold mb-4>404</h1>
+    <p text-lg text-gray-500>
+      {{ $t("notification.not_found", { msg: route.params.id }) }}
+    </p>
+  </div>
+
+  <div v-else-if="conflict" class="edit-page flex flex-col">
+    <Header>
+      <template #middle>
+        <span font-semibold>{{ $t("conflict.title") }}</span>
+      </template>
+    </Header>
+    <ConflictResolver
+      :resume-id="route.params.id as string"
+      :local-resume="conflict.local"
+      :remote-resume="conflict.remote"
+      @resolved="onConflictResolved"
+    />
+  </div>
+
+  <div v-else class="edit-page flex flex-col">
     <Header>
       <template #middle>
         <RenameResume />
@@ -38,6 +59,7 @@
 <script lang="ts" setup>
 import * as splitter from "@zag-js/splitter";
 import { normalizeProps, useMachine } from "@zag-js/vue";
+import type { ResumeStorageItem } from "~/types";
 
 // Horizontal splitpane
 const [state, send] = useMachine(
@@ -49,19 +71,26 @@ const [state, send] = useMachine(
 
 const api = computed(() => splitter.connect(state.value, send, normalizeProps));
 
-// Fetch resume data
+// State
 const route = useRoute();
-const router = useRouter();
-const localePath = useLocalePath();
+const notFound = ref(false);
+const conflict = ref<{ local: ResumeStorageItem; remote: ResumeStorageItem } | null>(
+  null
+);
 
+// Fetch resume data
 (async () => {
-  const found = await switchResume(route.params.id as string);
-  if (!found) {
-    const toast = useToast();
-    toast.notFound(route.params.id as string);
-    router.replace(localePath("/"));
+  const result = await switchResume(route.params.id as string);
+  if (result.status === "not_found") {
+    notFound.value = true;
+  } else if (result.status === "conflict") {
+    conflict.value = { local: result.local, remote: result.remote };
   }
 })();
+
+const onConflictResolved = () => {
+  conflict.value = null;
+};
 
 // Toogle toolbar
 const { width } = useWindowSize();

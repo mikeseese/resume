@@ -3,36 +3,73 @@ import { isClient } from "@renovamen/utils";
 import { DEFAULT_STYLES, DEFAULT_CSS_CONTENT } from ".";
 import type { ResumeStyles, ResumeStorageItem } from "~/types";
 
+const GITHUB_OWNER = "mikeseese";
+const GITHUB_REPO = "resume";
+const GITHUB_BRANCH = "main";
+
 interface ResumeManifestItem {
   id: string;
-  name: string;
+  commitHash: string;
 }
 
 /**
- * Fetch the resume manifest from the static site
+ * Fetch the resume manifest from GitHub's tree-commit-info endpoint
  */
 export const fetchResumeManifest = async (): Promise<ResumeManifestItem[]> => {
   if (!isClient) return [];
 
   try {
-    const baseURL = useRuntimeConfig().app.baseURL || "/";
-    const res = await fetch(`${baseURL}resumes/manifest.json`);
+    const res = await fetch(
+      `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/tree-commit-info/${GITHUB_BRANCH}/resumes`,
+      { headers: { Accept: "application/json" } }
+    );
     if (!res.ok) return [];
-    return await res.json();
+
+    const data = await res.json();
+    return Object.entries(data)
+      .filter(([filename]) => filename.endsWith(".md"))
+      .map(([filename, info]) => ({
+        id: filename.replace(/\.md$/, ""),
+        commitHash: (info as { oid: string }).oid
+      }));
   } catch {
     return [];
   }
 };
 
 /**
- * Fetch and parse a resume .md file from the static site
+ * Fetch the latest commit hash for a specific resume file from GitHub
+ */
+export const fetchLatestCommitHash = async (fileId: string): Promise<string | null> => {
+  if (!isClient) return null;
+
+  try {
+    const res = await fetch(
+      `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/commits/deferred_commit_data/${GITHUB_BRANCH}?original_branch=${GITHUB_BRANCH}&path=resumes%2F${fileId}.md`,
+      { headers: { Accept: "application/json" } }
+    );
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    if (data.deferredCommits && data.deferredCommits.length > 0) {
+      return data.deferredCommits[0].oid;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Fetch and parse a resume .md file from GitHub's raw content
  */
 export const fetchResumeFile = async (id: string): Promise<ResumeStorageItem | null> => {
   if (!isClient) return null;
 
   try {
-    const baseURL = useRuntimeConfig().app.baseURL || "/";
-    const res = await fetch(`${baseURL}resumes/${id}.md`);
+    const res = await fetch(
+      `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/refs/heads/${GITHUB_BRANCH}/resumes/${id}.md`
+    );
     if (!res.ok) return null;
 
     const content = await res.text();

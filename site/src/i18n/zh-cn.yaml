@@ -71,6 +71,12 @@ notification:
     yes: 已成功导入数据！
     no : 数据格式不正确
 
+conflict:
+  title: 检测到冲突
+  description: 您的本地更改与 GitHub 上的较新版本冲突。请查看以下差异并选择要保留的版本。
+  keep_local: 保留本地更改
+  use_remote: 使用远程版本
+
 github:
   title: GitHub 集成
   desc: 连接到 GitHub 以将简历更改直接提交到您的仓库。您需要一个具有 repo 权限的个人访问令牌。

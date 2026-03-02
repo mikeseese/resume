@@ -71,6 +71,12 @@ notification:
     yes: Datos importados correctamente!
     no : Formato de datos inválido.
 
+conflict:
+  title: Conflicto Detectado
+  description: Sus cambios locales entran en conflicto con una versión más reciente de GitHub. Revise las diferencias a continuación y elija qué versión conservar.
+  keep_local: Mantener Cambios Locales
+  use_remote: Usar Versión Remota
+
 github:
   title: Integración con GitHub
   desc: Conecte con GitHub para hacer commit de los cambios del currículum directamente a su repositorio. Necesita un Token de Acceso Personal con permisos de repo.
