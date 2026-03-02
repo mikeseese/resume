@@ -53,6 +53,9 @@ jobs:
         env:
           NUXT_PUBLIC_GOOGLE_FONTS_KEY: ${{ secrets.GOOGLE_FONTS_KEY }}
 
+      - name: Install Chrome for Puppeteer
+        run: npx puppeteer browsers install chrome
+
       - name: Generate latest resume PDF
         run: pnpm generate-pdf
 
