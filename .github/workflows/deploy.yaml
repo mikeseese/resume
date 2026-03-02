@@ -53,6 +53,9 @@ jobs:
         env:
           NUXT_PUBLIC_GOOGLE_FONTS_KEY: ${{ secrets.GOOGLE_FONTS_KEY }}
 
+      - name: Generate latest resume PDF
+        run: pnpm generate-pdf
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

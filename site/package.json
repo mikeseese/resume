@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt generate",
     "dev": "nuxt dev",
+    "generate-pdf": "node scripts/generate-latest-pdf.mjs",
     "serve": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
@@ -51,6 +52,7 @@
     "nuxt": "^3.11.2",
     "nuxt-simple-sitemap": "^4.4.1",
     "pinia": "^2.1.7",
+    "puppeteer": "^24.37.5",
     "ts-debounce": "^4.0.0",
     "vue-smart-pages": "workspace:*"
   }
