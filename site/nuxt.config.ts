@@ -70,6 +70,10 @@ export default defineNuxtConfig({
     url: "https://resume.mikeseese.com/"
   },
 
+  routeRules: {
+    "/latest.pdf": { prerender: false }
+  },
+
   pwa,
 
 });
