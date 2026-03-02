@@ -84,6 +84,20 @@ export const useToast = () => {
     });
   };
 
+  const reload = () => {
+    $toast.value.create({
+      description: nuxtApp.$i18n.t("notification.reload"),
+      type: "success"
+    });
+  };
+
+  const reloadError = () => {
+    $toast.value.create({
+      description: nuxtApp.$i18n.t("notification.reload_error"),
+      type: "error"
+    });
+  };
+
   return {
     save,
     switch: switchResume,
@@ -93,6 +107,8 @@ export const useToast = () => {
     duplicate,
     correct,
     import: importResume,
-    commitError
+    commitError,
+    reload,
+    reloadError
   };
 };

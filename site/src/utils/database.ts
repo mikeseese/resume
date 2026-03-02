@@ -346,6 +346,39 @@ export const resolveConflict = async (
   toast.switch(updatedChosen.name);
 };
 
+/**
+ * Force reload a file-based resume from GitHub, discarding any local changes
+ *
+ * @param id resume id (must start with "file:")
+ * @returns true if successfully reloaded, false otherwise
+ */
+export const forceReloadResume = async (id: string): Promise<boolean> => {
+  if (!id.startsWith("file:")) return false;
+
+  const toast = useToast();
+  const fileId = id.substring(5);
+
+  const [latestHash, resume] = await Promise.all([
+    fetchLatestCommitHash(fileId),
+    fetchResumeFile(fileId)
+  ]);
+
+  if (!resume) {
+    toast.reloadError();
+    return false;
+  }
+
+  const updatedResume = { ...resume, commitHash: latestHash || undefined, dirty: false };
+
+  const currentStorage = (await getStorage()) || {};
+  currentStorage[id] = updatedResume;
+  await localForage.setItem(MARKDOWN_RESUME_KEY, currentStorage);
+
+  setResume(id, updatedResume);
+  toast.reload();
+  return true;
+};
+
 export const duplicateResume = async (id: string) => {
   const toast = useToast();
   const storage = (await getStorage()) || {};

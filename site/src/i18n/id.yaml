@@ -65,6 +65,8 @@ notification:
   new: Resume baru dibuat
   duplicate: Duplikat resume "{old}" dibuat "{new}"
   commit_error: "Gagal commit: {msg}"
+  reload: Berhasil memuat ulang versi terbaru dari GitHub
+  reload_error: Gagal memuat ulang dari GitHub
   correct:
     yes: Memperbaiki {num} kata
     no : Semua huruf sudah benar!
@@ -86,6 +88,7 @@ github:
   login: Hubungkan
   logout: Putuskan
   commit: Commit ke GitHub
+  reload: Muat ulang dari GitHub
   error_no_token: Silakan masukkan token GitHub
   error_invalid_repo: "Silakan masukkan repo yang valid dalam format owner/repo"
   error_invalid_token: Token GitHub tidak valid

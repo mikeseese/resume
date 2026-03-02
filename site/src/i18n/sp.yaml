@@ -64,6 +64,8 @@ notification:
   new: Creado nuevo resumen
   duplicate: Created resume "{old}"'s duplication "{new}"
   commit_error: "Error al commit: {msg}"
+  reload: Versión más reciente recargada desde GitHub
+  reload_error: Error al recargar desde GitHub
   correct:
     yes: Corregidos {num} palabras
     no : Buen trabajo, no hubo nada que corregir!
@@ -85,6 +87,7 @@ github:
   login: Conectar
   logout: Desconectar
   commit: Commit a GitHub
+  reload: Recargar desde GitHub
   error_no_token: Por favor, ingrese un token de GitHub
   error_invalid_repo: "Por favor, ingrese un repo válido en formato owner/repo"
   error_invalid_token: Token de GitHub no válido

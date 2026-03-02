@@ -64,6 +64,8 @@ notification:
   new: 新建成功
   duplicate: 已创建简历 "{old}" 的副本 "{new}"
   commit_error: "提交失败：{msg}"
+  reload: 已从 GitHub 重新加载最新版本
+  reload_error: 从 GitHub 重新加载失败
   correct:
     yes: 成功修正 {num} 个单词
     no : 您的所有拼写都是正确的！
@@ -85,6 +87,7 @@ github:
   login: 连接
   logout: 断开
   commit: 提交到 GitHub
+  reload: 从 GitHub 重新加载
   error_no_token: 请输入 GitHub 令牌
   error_invalid_repo: "请输入有效的仓库，格式为 owner/repo"
   error_invalid_token: GitHub 令牌无效
