@@ -28,6 +28,7 @@
 
       <template #tail>
         <SaveResume />
+        <ReloadResume />
         <CommitResume />
         <ToggleToolbar
           :is-toolbar-open="isToolbarOpen"

@@ -65,6 +65,8 @@ notification:
   new: New resume created
   duplicate: Created resume "{old}"'s duplication "{new}"
   commit_error: "Commit failed: {msg}"
+  reload: Reloaded latest version from GitHub
+  reload_error: Failed to reload from GitHub
   correct:
     yes: Corrected {num} words
     no : All case are correct!
@@ -86,6 +88,7 @@ github:
   login: Connect
   logout: Disconnect
   commit: Commit to GitHub
+  reload: Reload from GitHub
   error_no_token: Please enter a GitHub token
   error_invalid_repo: "Please enter a valid repo in owner/repo format"
   error_invalid_token: Invalid GitHub token
