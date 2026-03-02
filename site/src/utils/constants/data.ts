@@ -46,7 +46,6 @@ export const EN_FONTS: Font[] = [
   {
     name: "Fira Sans"
   },
-  /*
   {
     name: "Adobe Garamond Pro"
   },
@@ -65,7 +64,6 @@ export const EN_FONTS: Font[] = [
   {
     name: "Times Newer Roman"
   }
-  */
 ];
 
 export const CJK_FONTS: Font[] = [
