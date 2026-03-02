@@ -4,28 +4,28 @@
   font-family: "CMU Sans Serif";
   font-style: normal;
   font-weight: normal;
-  src: url("~/assets/fonts/cmu-sans-serif/regular.ttf") format("opentype");
+  src: url("~/assets/fonts/cmu-sans-serif/regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "CMU Sans Serif";
   font-style: normal;
   font-weight: bold;
-  src: url("~/assets/fonts/cmu-sans-serif/bold.ttf") format("opentype");
+  src: url("~/assets/fonts/cmu-sans-serif/bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "CMU Sans Serif";
   font-style: italic;
   font-weight: normal;
-  src: url("~/assets/fonts/cmu-sans-serif/italic.ttf") format("opentype");
+  src: url("~/assets/fonts/cmu-sans-serif/italic.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "CMU Sans Serif";
   font-style: italic;
   font-weight: bold;
-  src: url("~/assets/fonts/cmu-sans-serif/bolditalic.ttf") format("opentype");
+  src: url("~/assets/fonts/cmu-sans-serif/bolditalic.ttf") format("truetype");
 }
 
 @font-face {
@@ -116,56 +116,154 @@
   font-family: "Adobe Garamond Pro";
   font-style: normal;
   font-weight: normal;
-  src: url("~/assets/fonts/adobe-garamond-pro/regular.ttf") format("opentype");
+  src: url("~/assets/fonts/adobe-garamond-pro/regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Adobe Garamond Pro";
   font-style: normal;
   font-weight: bold;
-  src: url("~/assets/fonts/adobe-garamond-pro/bold.ttf") format("opentype");
+  src: url("~/assets/fonts/adobe-garamond-pro/bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Adobe Garamond Pro";
   font-style: italic;
   font-weight: normal;
-  src: url("~/assets/fonts/adobe-garamond-pro/italic.ttf") format("opentype");
+  src: url("~/assets/fonts/adobe-garamond-pro/italic.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Adobe Garamond Pro";
   font-style: italic;
   font-weight: bold;
-  src: url("~/assets/fonts/adobe-garamond-pro/bolditalic.ttf") format("opentype");
+  src: url("~/assets/fonts/adobe-garamond-pro/bolditalic.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Euclid";
   font-style: normal;
   font-weight: normal;
-  src: url("~/assets/fonts/euclid/regular.ttf") format("opentype");
+  src: url("~/assets/fonts/euclid/regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Euclid";
   font-style: normal;
   font-weight: bold;
-  src: url("~/assets/fonts/euclid/bold.ttf") format("opentype");
+  src: url("~/assets/fonts/euclid/bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Euclid";
   font-style: italic;
   font-weight: normal;
-  src: url("~/assets/fonts/euclid/italic.ttf") format("opentype");
+  src: url("~/assets/fonts/euclid/italic.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Euclid";
   font-style: italic;
   font-weight: bold;
-  src: url("~/assets/fonts/euclid/bolditalic.ttf") format("opentype");
+  src: url("~/assets/fonts/euclid/bolditalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: 200;
+  src: url("~/assets/fonts/fira-sans/extralight.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: 200;
+  src: url("~/assets/fonts/fira-sans/extralightitalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: 300;
+  src: url("~/assets/fonts/fira-sans/light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: 300;
+  src: url("~/assets/fonts/fira-sans/lightitalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: normal;
+  src: url("~/assets/fonts/fira-sans/regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: normal;
+  src: url("~/assets/fonts/fira-sans/italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: 500;
+  src: url("~/assets/fonts/fira-sans/medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: 500;
+  src: url("~/assets/fonts/fira-sans/mediumitalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: bold;
+  src: url("~/assets/fonts/fira-sans/bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: bold;
+  src: url("~/assets/fonts/fira-sans/bolditalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: 800;
+  src: url("~/assets/fonts/fira-sans/extrabold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: 800;
+  src: url("~/assets/fonts/fira-sans/extrabolditalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: normal;
+  font-weight: 900;
+  src: url("~/assets/fonts/fira-sans/black.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  font-style: italic;
+  font-weight: 900;
+  src: url("~/assets/fonts/fira-sans/blackitalic.ttf") format("truetype");
 }
 
 /* Chinese */
@@ -174,26 +272,26 @@
   font-family: "LXGW WenKai";
   font-style: normal;
   font-weight: normal;
-  src: url("~/assets/fonts/lxgw-wen-kai/regular.ttf") format("opentype");
+  src: url("~/assets/fonts/lxgw-wen-kai/regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "LXGW WenKai";
   font-style: normal;
   font-weight: bold;
-  src: url("~/assets/fonts/lxgw-wen-kai/bold.ttf") format("opentype");
+  src: url("~/assets/fonts/lxgw-wen-kai/bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "HKST";
   font-style: normal;
   font-weight: normal;
-  src: url("~/assets/fonts/hkst/w7.ttf") format("opentype");
+  src: url("~/assets/fonts/hkst/w7.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "HKST";
   font-style: normal;
   font-weight: bold;
-  src: url("~/assets/fonts/hkst/w9.ttf") format("opentype");
+  src: url("~/assets/fonts/hkst/w9.ttf") format("truetype");
 }
