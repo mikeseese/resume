@@ -1,4 +1,8 @@
+import * as localForage from "localforage";
 import { isClient } from "@renovamen/utils";
+import type { ResumeStorage } from "~/types";
+
+const MARKDOWN_RESUME_KEY = "MARKDOWN_RESUME_data";
 
 const GITHUB_TOKEN_KEY = "MARKDOWN_RESUME_github_token";
 const GITHUB_REPO_KEY = "MARKDOWN_RESUME_github_repo";
@@ -171,6 +175,19 @@ export const commitResumeFile = async (
     );
 
     if (res.ok) {
+      // Update local storage: set dirty to false and update commitHash
+      const data = await res.json();
+      const newBlobSha = data?.content?.sha;
+      if (newBlobSha) {
+        const storage: ResumeStorage =
+          (await localForage.getItem<ResumeStorage>(MARKDOWN_RESUME_KEY)) || {};
+        const storageKey = `file:${filename}`;
+        if (storage[storageKey]) {
+          storage[storageKey].commitHash = newBlobSha;
+          storage[storageKey].dirty = false;
+          await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
+        }
+      }
       return { success: true };
     }
 
@@ -213,6 +230,14 @@ export const deleteResumeFile = async (
     );
 
     if (res.ok) {
+      // Remove the resume from local storage cache
+      const storage: ResumeStorage =
+        (await localForage.getItem<ResumeStorage>(MARKDOWN_RESUME_KEY)) || {};
+      const storageKey = `file:${filename}`;
+      if (storage[storageKey]) {
+        delete storage[storageKey];
+        await localForage.setItem(MARKDOWN_RESUME_KEY, storage);
+      }
       return { success: true };
     }
 
