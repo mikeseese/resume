@@ -72,6 +72,12 @@ notification:
     yes: Data berhasil diimpor!
     no : Format data tidak valid.
 
+conflict:
+  title: Konflik Terdeteksi
+  description: Perubahan lokal Anda bertentangan dengan versi terbaru dari GitHub. Tinjau perbedaan di bawah dan pilih versi yang akan disimpan.
+  keep_local: Simpan Perubahan Lokal
+  use_remote: Gunakan Versi Remote
+
 github:
   title: Integrasi GitHub
   desc: Hubungkan ke GitHub untuk mengcommit perubahan resume langsung ke repositori Anda. Anda memerlukan Personal Access Token dengan scope repo.

@@ -72,6 +72,12 @@ notification:
     yes: Data has been successfully imported!
     no : Data format is invalid.
 
+conflict:
+  title: Conflict Detected
+  description: Your local changes conflict with a newer version from GitHub. Review the differences below and choose which version to keep.
+  keep_local: Keep Local Changes
+  use_remote: Use Remote Version
+
 github:
   title: GitHub Integration
   desc: Connect to GitHub to commit resume changes directly to your repository. You need a Personal Access Token with repo scope.

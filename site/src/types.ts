@@ -53,7 +53,14 @@ export type ResumeStorageItem = {
   css: string;
   styles: ResumeStyles;
   update: string;
+  commitHash?: string;
+  dirty?: boolean;
 };
+
+export type SwitchResumeResult =
+  | { status: "loaded" }
+  | { status: "not_found" }
+  | { status: "conflict"; local: ResumeStorageItem; remote: ResumeStorageItem };
 
 export type ResumeStorage = {
   [id: string]: ResumeStorageItem;
