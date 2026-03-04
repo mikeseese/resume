@@ -3,7 +3,7 @@ name: build-and-deploy
 on:
   push:
     branches: [ main ]
-  
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -55,9 +55,6 @@ jobs:
 
       - name: Install Chrome for Puppeteer
         run: npx puppeteer browsers install chrome
-
-      - name: Generate latest resume PDF
-        run: pnpm generate-pdf
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
